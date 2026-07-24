@@ -1,0 +1,10 @@
+{
+  "name": "@dearfutureme/contract-docs",
+  "private": true,
+  "type": "module",
+  "description": "Static Scalar HTML API reference generated from contract/openapi.json",
+  "packageManager": "pnpm@11.16.0",
+  "scripts": {
+    "generate": "node generate.mjs"
+  }
+}
