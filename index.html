@@ -424,12 +424,23 @@
                                     "string",
                                     "null"
                                 ]
+                            },
+                            "two_factor_enabled": {
+                                "type": "boolean"
+                            },
+                            "avatar": {
+                                "default": null,
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
                             }
                         },
                         "required": [
                             "id",
                             "name",
-                            "email"
+                            "email",
+                            "two_factor_enabled"
                         ],
                         "additionalProperties": false
                     }
@@ -442,7 +453,7 @@
             },
             "BridgeUrlData": {
                 "title": "Bridge Url",
-                "description": "The signed, single-use URL that exchanges a mobile credential for a web\nsession: following it signs the browser in and lands on the security\nsettings page, where enrollment still demands the password.",
+                "description": "Following this URL lands on the security settings page, where enrollment\nstill demands the password — the bridge never bypasses that gate.",
                 "type": "object",
                 "properties": {
                     "url": {
@@ -456,7 +467,7 @@
             },
             "ChallengeTicketData": {
                 "title": "Challenge Ticket",
-                "description": "The challenge ticket issued by a successful sign-in when the account has a\nsecond factor: single-use, short-lived, and held server-side only.",
+                "description": "Held server-side only: the ticket is minted and burned on the server, so it\ncarries no identity a client could replay into another account.",
                 "type": "object",
                 "properties": {
                     "ticket": {
@@ -486,12 +497,23 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "two_factor_enabled": {
+                        "type": "boolean"
+                    },
+                    "avatar": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 },
                 "required": [
                     "id",
                     "name",
-                    "email"
+                    "email",
+                    "two_factor_enabled"
                 ],
                 "additionalProperties": false
             },
