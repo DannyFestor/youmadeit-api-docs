@@ -5,6 +5,72 @@
         "version": "0.0.0"
     },
     "paths": {
+        "/api/v1/anchors": {
+            "post": {
+                "summary": "Create an anchor from the Arrival Interview",
+                "operationId": "createAnchor",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAnchorData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The sealed anchor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnchorData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/bridge": {
             "post": {
                 "summary": "Exchange a bearer credential for a session bridge link",
@@ -348,9 +414,50 @@
             }
         },
         "schemas": {
+            "AnchorData": {
+                "title": "Anchor",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "goal": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "target_date": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "arrived",
+                            "archived"
+                        ]
+                    },
+                    "written_at": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "goal",
+                    "body",
+                    "target_date",
+                    "state",
+                    "written_at",
+                    "created_at"
+                ],
+                "additionalProperties": false
+            },
             "ApiErrorData": {
                 "title": "Api Error",
-                "description": "Not dead code — discovered reflectively by DiscoverDataClasses.",
                 "type": "object",
                 "properties": {
                     "message": {
@@ -441,7 +548,6 @@
             },
             "BridgeUrlData": {
                 "title": "Bridge Url",
-                "description": "Following this URL lands on the security settings page, where enrollment\nstill demands the password — the bridge never bypasses that gate.",
                 "type": "object",
                 "properties": {
                     "url": {
@@ -455,7 +561,6 @@
             },
             "ChallengeTicketData": {
                 "title": "Challenge Ticket",
-                "description": "Held server-side only: the ticket is minted and burned on the server, so it\ncarries no identity a client could replay into another account.",
                 "type": "object",
                 "properties": {
                     "ticket": {
@@ -464,6 +569,27 @@
                 },
                 "required": [
                     "ticket"
+                ],
+                "additionalProperties": false
+            },
+            "CreateAnchorData": {
+                "title": "Create Anchor",
+                "type": "object",
+                "properties": {
+                    "goal": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "target_date": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "goal",
+                    "body",
+                    "target_date"
                 ],
                 "additionalProperties": false
             },
