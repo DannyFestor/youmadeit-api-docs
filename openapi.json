@@ -22,7 +22,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateAnchorData"
+                                "$ref": "#/components/schemas/Anchor.CreateData"
                             }
                         }
                     }
@@ -33,7 +33,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AnchorData"
+                                    "$ref": "#/components/schemas/Anchor.AnchorData"
                                 }
                             }
                         }
@@ -89,7 +89,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/BridgeUrlData"
+                                    "$ref": "#/components/schemas/Auth.BridgeUrlData"
                                 }
                             }
                         }
@@ -204,7 +204,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegisterUserData"
+                                "$ref": "#/components/schemas/Auth.RegisterUserData"
                             }
                         }
                     }
@@ -215,7 +215,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthTokenData"
+                                    "$ref": "#/components/schemas/Auth.AuthTokenData"
                                 }
                             }
                         }
@@ -245,7 +245,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/TwoFactorChallengeData"
+                                "$ref": "#/components/schemas/Auth.TwoFactorChallengeData"
                             }
                         }
                     }
@@ -256,7 +256,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthTokenData"
+                                    "$ref": "#/components/schemas/Auth.AuthTokenData"
                                 }
                             }
                         }
@@ -296,7 +296,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ForgotPasswordData"
+                                "$ref": "#/components/schemas/Auth.ForgotPasswordData"
                             }
                         }
                     }
@@ -330,7 +330,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/LoginData"
+                                "$ref": "#/components/schemas/Auth.LoginData"
                             }
                         }
                     }
@@ -343,10 +343,10 @@
                                 "schema": {
                                     "oneOf": [
                                         {
-                                            "$ref": "#/components/schemas/AuthTokenData"
+                                            "$ref": "#/components/schemas/Auth.AuthTokenData"
                                         },
                                         {
-                                            "$ref": "#/components/schemas/ChallengeTicketData"
+                                            "$ref": "#/components/schemas/Auth.ChallengeTicketData"
                                         }
                                     ]
                                 }
@@ -414,12 +414,12 @@
             }
         },
         "schemas": {
-            "AnchorData": {
+            "Anchor.AnchorData": {
                 "title": "Anchor",
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "goal": {
                         "type": "string"
@@ -439,10 +439,12 @@
                         ]
                     },
                     "written_at": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "created_at": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "required": [
@@ -453,6 +455,30 @@
                     "state",
                     "written_at",
                     "created_at"
+                ],
+                "additionalProperties": false
+            },
+            "Anchor.CreateData": {
+                "title": "Create",
+                "type": "object",
+                "properties": {
+                    "goal": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "target_date": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-after": "The value must be after 2026-09-03T00:00:00Z."
+                    }
+                },
+                "required": [
+                    "goal",
+                    "body",
+                    "target_date"
                 ],
                 "additionalProperties": false
             },
@@ -494,7 +520,7 @@
                 ],
                 "additionalProperties": false
             },
-            "AuthTokenData": {
+            "Auth.AuthTokenData": {
                 "title": "Auth Token",
                 "type": "object",
                 "properties": {
@@ -506,7 +532,7 @@
                         "type": "object",
                         "properties": {
                             "id": {
-                                "type": "integer"
+                                "type": "string"
                             },
                             "name": {
                                 "type": "string"
@@ -518,24 +544,24 @@
                                 "type": [
                                     "string",
                                     "null"
-                                ]
-                            },
-                            "two_factor_enabled": {
-                                "type": "boolean"
+                                ],
+                                "format": "date-time"
                             },
                             "avatar": {
-                                "default": null,
                                 "type": [
                                     "string",
                                     "null"
                                 ]
+                            },
+                            "is_two_factor_enabled": {
+                                "type": "boolean"
                             }
                         },
                         "required": [
                             "id",
                             "name",
                             "email",
-                            "two_factor_enabled"
+                            "is_two_factor_enabled"
                         ],
                         "additionalProperties": false
                     }
@@ -546,7 +572,7 @@
                 ],
                 "additionalProperties": false
             },
-            "BridgeUrlData": {
+            "Auth.BridgeUrlData": {
                 "title": "Bridge Url",
                 "type": "object",
                 "properties": {
@@ -559,7 +585,7 @@
                 ],
                 "additionalProperties": false
             },
-            "ChallengeTicketData": {
+            "Auth.ChallengeTicketData": {
                 "title": "Challenge Ticket",
                 "type": "object",
                 "properties": {
@@ -572,66 +598,7 @@
                 ],
                 "additionalProperties": false
             },
-            "CreateAnchorData": {
-                "title": "Create Anchor",
-                "type": "object",
-                "properties": {
-                    "goal": {
-                        "type": "string"
-                    },
-                    "body": {
-                        "type": "string"
-                    },
-                    "target_date": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "goal",
-                    "body",
-                    "target_date"
-                ],
-                "additionalProperties": false
-            },
-            "CurrentUserData": {
-                "title": "Current User",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "email_verified_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "two_factor_enabled": {
-                        "type": "boolean"
-                    },
-                    "avatar": {
-                        "default": null,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    }
-                },
-                "required": [
-                    "id",
-                    "name",
-                    "email",
-                    "two_factor_enabled"
-                ],
-                "additionalProperties": false
-            },
-            "ForgotPasswordData": {
+            "Auth.ForgotPasswordData": {
                 "title": "Forgot Password",
                 "type": "object",
                 "properties": {
@@ -644,7 +611,7 @@
                 ],
                 "additionalProperties": false
             },
-            "LoginData": {
+            "Auth.LoginData": {
                 "title": "Login",
                 "type": "object",
                 "properties": {
@@ -668,7 +635,7 @@
                 ],
                 "additionalProperties": false
             },
-            "RegisterUserData": {
+            "Auth.RegisterUserData": {
                 "title": "Register User",
                 "type": "object",
                 "properties": {
@@ -700,7 +667,7 @@
                 ],
                 "additionalProperties": false
             },
-            "ResetPasswordData": {
+            "Auth.ResetPasswordData": {
                 "title": "Reset Password",
                 "type": "object",
                 "properties": {
@@ -717,7 +684,7 @@
                 ],
                 "additionalProperties": false
             },
-            "TwoFactorChallengeData": {
+            "Auth.TwoFactorChallengeData": {
                 "title": "Two Factor Challenge",
                 "type": "object",
                 "properties": {
@@ -742,6 +709,99 @@
                     "email",
                     "ticket",
                     "code"
+                ],
+                "additionalProperties": false
+            },
+            "CurrentUserData": {
+                "title": "Current User",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "email_verified_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "avatar": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "is_two_factor_enabled": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "is_two_factor_enabled"
+                ],
+                "additionalProperties": false
+            },
+            "Entry.CreateData": {
+                "title": "Create",
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "minLength": 3
+                    },
+                    "body": {
+                        "type": "string",
+                        "minLength": 10
+                    },
+                    "entry_date": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\"."
+                    }
+                },
+                "required": [
+                    "title",
+                    "body",
+                    "entry_date"
+                ],
+                "additionalProperties": false
+            },
+            "Entry.EntryData": {
+                "title": "Entry",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "entry_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "body",
+                    "entry_date",
+                    "created_at"
                 ],
                 "additionalProperties": false
             }
