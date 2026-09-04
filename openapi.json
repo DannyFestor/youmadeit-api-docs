@@ -472,7 +472,31 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-03T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-04T00:00:00Z."
+                    }
+                },
+                "required": [
+                    "goal",
+                    "body",
+                    "target_date"
+                ],
+                "additionalProperties": false
+            },
+            "Anchor.UpdateData": {
+                "title": "Update",
+                "type": "object",
+                "properties": {
+                    "goal": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "target_date": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-after": "The value must be after 2026-09-04T00:00:00Z."
                     }
                 },
                 "required": [
@@ -803,6 +827,34 @@
                     "entry_date",
                     "created_at"
                 ],
+                "additionalProperties": false
+            },
+            "Entry.UpdateData": {
+                "title": "Update",
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "minLength": 3
+                    },
+                    "body": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "minLength": 10
+                    },
+                    "entry_date": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "x-date-format": "The value must match the format \"Y-m-d\"."
+                    }
+                },
                 "additionalProperties": false
             }
         }
