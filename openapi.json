@@ -1,1016 +1,1958 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-        "title": "DearFutureMe API",
-        "version": "0.0.0"
-    },
-    "paths": {
-        "/api/v1/anchors": {
-            "post": {
-                "summary": "Create an anchor from the Arrival Interview",
-                "operationId": "createAnchor",
-                "tags": [
-                    "Anchors"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Anchor.CreateData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "The sealed anchor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Anchor.AnchorData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DearFutureMe API",
+    "version": "0.0.0"
+  },
+  "paths": {
+    "/api/v1/anchors": {
+      "get": {
+        "summary": "List the user's anchors",
+        "operationId": "listAnchors",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
-        },
-        "/api/v1/anchors/{anchor}": {
-            "get": {
-                "summary": "Fetch a single anchor",
-                "operationId": "showAnchor",
-                "tags": [
-                    "Anchors"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "anchor",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The requested anchor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Anchor.AnchorData"
-                                }
-                            }
-                        }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cursor-paginated results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Anchor.AnchorData"
+                      }
                     },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
+                    "links": {
+                      "type": "array"
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The anchor does not exist, was deleted, or belongs to another user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": true
                     }
+                  },
+                  "required": [
+                    "data",
+                    "links",
+                    "meta"
+                  ]
                 }
-            },
-            "put": {
-                "summary": "Update an anchor",
-                "operationId": "updateAnchor",
-                "tags": [
-                    "Anchors"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "anchor",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Anchor.UpdateData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The updated anchor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Anchor.AnchorData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The anchor does not exist, was deleted, or belongs to another user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
+              }
             }
-        },
-        "/api/v1/bridge": {
-            "post": {
-                "summary": "Exchange a bearer credential for a session bridge link",
-                "operationId": "createSessionBridge",
-                "tags": [
-                    "Auth"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "A signed, single-use URL that signs the browser in on the security settings page when followed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Auth.BridgeUrlData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
                 }
+              }
             }
-        },
-        "/api/v1/email/resend": {
-            "post": {
-                "summary": "Resend the email verification message",
-                "operationId": "emailResend",
-                "tags": [
-                    "Auth"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "The verification message was sent (or the address is already verified)"
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Too many resend attempts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
                 }
+              }
             }
-        },
-        "/api/v1/user": {
-            "get": {
-                "summary": "Retrieve the currently authenticated user",
-                "operationId": "getCurrentUser",
-                "tags": [
-                    "User"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The authenticated user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrentUserData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/register": {
-            "post": {
-                "summary": "Register a new account and return an auth token",
-                "operationId": "register",
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Auth.RegisterUserData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "The created account and its auth token",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Auth.AuthTokenData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/two-factor-challenge": {
-            "post": {
-                "summary": "Complete the two-factor challenge with an authenticator or recovery code",
-                "operationId": "twoFactorChallenge",
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Auth.TwoFactorChallengeData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The second factor was accepted and the credential is issued — the ticket is consumed whether the code is right or wrong",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Auth.AuthTokenData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed, the code is wrong, or the ticket is missing, expired or bound to another account",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Too many challenge attempts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/forgot-password": {
-            "post": {
-                "summary": "Request a password reset link by email",
-                "operationId": "forgotPassword",
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Auth.ForgotPasswordData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "202": {
-                        "description": "A reset link was sent if the address is registered — the response never reveals whether it was"
-                    },
-                    "422": {
-                        "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/login": {
-            "post": {
-                "summary": "Sign in and return an auth token",
-                "operationId": "login",
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Auth.LoginData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The authenticated account and its auth token, or a two-factor challenge ticket when the account has a second factor — a successful sign-in either way",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "oneOf": [
-                                        {
-                                            "$ref": "#/components/schemas/Auth.AuthTokenData"
-                                        },
-                                        {
-                                            "$ref": "#/components/schemas/Auth.ChallengeTicketData"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed or credentials did not match",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Too many sign-in attempts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/logout": {
-            "post": {
-                "summary": "Sign out of the current device",
-                "operationId": "logout",
-                "tags": [
-                    "Auth"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Signed out"
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
-    },
-    "components": {
-        "securitySchemes": {
-            "sanctum": {
-                "type": "http",
-                "scheme": "bearer"
+      },
+      "post": {
+        "summary": "Create an anchor from the Arrival Interview",
+        "operationId": "createAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Anchor.CreateData"
+              }
             }
+          }
         },
-        "schemas": {
-            "Anchor.AnchorData": {
-                "title": "Anchor",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "goal": {
-                        "type": "string"
-                    },
-                    "body": {
-                        "type": "string"
-                    },
-                    "target_date": {
-                        "type": "string"
-                    },
-                    "state": {
-                        "type": "string",
-                        "enum": [
-                            "active",
-                            "arrived",
-                            "archived"
-                        ]
-                    },
-                    "written_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "required": [
-                    "id",
-                    "goal",
-                    "body",
-                    "target_date",
-                    "state",
-                    "written_at",
-                    "created_at"
-                ],
-                "additionalProperties": false
-            },
-            "Anchor.CreateData": {
-                "title": "Create",
-                "type": "object",
-                "properties": {
-                    "goal": {
-                        "type": "string",
-                        "maxLength": 255
-                    },
-                    "body": {
-                        "type": "string"
-                    },
-                    "target_date": {
-                        "type": "string",
-                        "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-04T00:00:00Z."
-                    }
-                },
-                "required": [
-                    "goal",
-                    "body",
-                    "target_date"
-                ],
-                "additionalProperties": false
-            },
-            "Anchor.UpdateData": {
-                "title": "Update",
-                "type": "object",
-                "properties": {
-                    "goal": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "maxLength": 255
-                    },
-                    "body": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "target_date": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-04T00:00:00Z."
-                    }
-                },
-                "additionalProperties": false
-            },
-            "ApiErrorData": {
-                "title": "Api Error",
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "code": {
-                        "type": "string",
-                        "enum": [
-                            "UNAUTHENTICATED",
-                            "VALIDATION_ERROR",
-                            "FORBIDDEN",
-                            "NOT_FOUND",
-                            "RATE_LIMITED",
-                            "SERVER_ERROR"
-                        ]
-                    },
-                    "errors": {
-                        "default": null,
-                        "type": [
-                            "object",
-                            "null"
-                        ],
-                        "additionalProperties": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "required": [
-                    "message",
-                    "code"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.AuthTokenData": {
-                "title": "Auth Token",
-                "type": "object",
-                "properties": {
-                    "token": {
-                        "type": "string"
-                    },
-                    "user": {
-                        "title": "Current User",
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "string"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "email": {
-                                "type": "string"
-                            },
-                            "email_verified_at": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "format": "date-time"
-                            },
-                            "avatar": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
-                            },
-                            "is_two_factor_enabled": {
-                                "type": "boolean"
-                            }
-                        },
-                        "required": [
-                            "id",
-                            "name",
-                            "email",
-                            "is_two_factor_enabled"
-                        ],
-                        "additionalProperties": false
-                    }
-                },
-                "required": [
-                    "token",
-                    "user"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.BridgeUrlData": {
-                "title": "Bridge Url",
-                "type": "object",
-                "properties": {
-                    "url": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "url"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.ChallengeTicketData": {
-                "title": "Challenge Ticket",
-                "type": "object",
-                "properties": {
-                    "ticket": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "ticket"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.ForgotPasswordData": {
-                "title": "Forgot Password",
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "email"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.LoginData": {
-                "title": "Login",
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    },
-                    "device_name": {
-                        "default": null,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    }
-                },
-                "required": [
-                    "email",
-                    "password"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.RegisterUserData": {
-                "title": "Register User",
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    },
-                    "password_confirmation": {
-                        "type": "string"
-                    },
-                    "device_name": {
-                        "default": null,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    }
-                },
-                "required": [
-                    "name",
-                    "email",
-                    "password",
-                    "password_confirmation"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.ResetPasswordData": {
-                "title": "Reset Password",
-                "type": "object",
-                "properties": {
-                    "password": {
-                        "type": "string"
-                    },
-                    "password_confirmation": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "password",
-                    "password_confirmation"
-                ],
-                "additionalProperties": false
-            },
-            "Auth.TwoFactorChallengeData": {
-                "title": "Two Factor Challenge",
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string"
-                    },
-                    "ticket": {
-                        "type": "string"
-                    },
-                    "code": {
-                        "type": "string"
-                    },
-                    "device_name": {
-                        "default": null,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    }
-                },
-                "required": [
-                    "email",
-                    "ticket",
-                    "code"
-                ],
-                "additionalProperties": false
-            },
-            "CurrentUserData": {
-                "title": "Current User",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "email_verified_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "avatar": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "is_two_factor_enabled": {
-                        "type": "boolean"
-                    }
-                },
-                "required": [
-                    "id",
-                    "name",
-                    "email",
-                    "is_two_factor_enabled"
-                ],
-                "additionalProperties": false
-            },
-            "Entry.CreateData": {
-                "title": "Create",
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "minLength": 3
-                    },
-                    "body": {
-                        "type": "string",
-                        "minLength": 10
-                    },
-                    "entry_date": {
-                        "type": "string",
-                        "x-date-format": "The value must match the format \"Y-m-d\"."
-                    }
-                },
-                "required": [
-                    "title",
-                    "body",
-                    "entry_date"
-                ],
-                "additionalProperties": false
-            },
-            "Entry.EntryData": {
-                "title": "Entry",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "body": {
-                        "type": "string"
-                    },
-                    "entry_date": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "required": [
-                    "id",
-                    "title",
-                    "body",
-                    "entry_date",
-                    "created_at"
-                ],
-                "additionalProperties": false
-            },
-            "Entry.UpdateData": {
-                "title": "Update",
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "minLength": 3
-                    },
-                    "body": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "minLength": 10
-                    },
-                    "entry_date": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "x-date-format": "The value must match the format \"Y-m-d\"."
-                    }
-                },
-                "additionalProperties": false
+        "responses": {
+          "201": {
+            "description": "The sealed anchor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Anchor.AnchorData"
+                }
+              }
             }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
         }
+      }
+    },
+    "/api/v1/anchors/{anchor}": {
+      "get": {
+        "summary": "Fetch a single anchor",
+        "operationId": "showAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested anchor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Anchor.AnchorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an anchor",
+        "operationId": "updateAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Anchor.UpdateData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated anchor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Anchor.AnchorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an anchor (soft delete)",
+        "operationId": "deleteAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The anchor was soft-deleted"
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/anchors/{anchor}/entries": {
+      "post": {
+        "summary": "Attach entries to an anchor",
+        "operationId": "attachEntriesToAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnchorEntry.StoreData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The entries were attached to the anchor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "None of the requested entries could be attached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/anchors/{anchor}/entries/{entry}": {
+      "delete": {
+        "summary": "Detach an entry from an anchor",
+        "operationId": "detachEntryFromAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entry",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The entry was detached from the anchor"
+          },
+          "400": {
+            "description": "The entry is not attached to the anchor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor or entry does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/anchors/{anchor}/restore": {
+      "post": {
+        "summary": "Restore a soft-deleted anchor",
+        "operationId": "restoreAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The restored anchor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Anchor.AnchorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/anchors/{anchor}/force": {
+      "delete": {
+        "summary": "Force delete an anchor",
+        "operationId": "forceDeleteAnchor",
+        "tags": [
+          "Anchors"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The anchor was permanently deleted"
+          },
+          "400": {
+            "description": "The resource has not been soft-deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The anchor does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/entries": {
+      "get": {
+        "summary": "List the user's entries",
+        "operationId": "listEntries",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cursor-paginated results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Entry.EntryData"
+                      }
+                    },
+                    "links": {
+                      "type": "array"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an entry",
+        "operationId": "createEntry",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entry.CreateData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entry.EntryData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/entries/{entry}": {
+      "get": {
+        "summary": "Fetch a single entry",
+        "operationId": "showEntry",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entry.EntryData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The entry does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an entry",
+        "operationId": "updateEntry",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entry.UpdateData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entry.EntryData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The entry does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an entry (soft delete)",
+        "operationId": "deleteEntry",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The entry was soft-deleted"
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The entry does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/entries/{entry}/restore": {
+      "post": {
+        "summary": "Restore a soft-deleted entry",
+        "operationId": "restoreEntry",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The restored entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entry.EntryData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The entry does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/entries/{entry}/force": {
+      "delete": {
+        "summary": "Force delete an entry",
+        "operationId": "forceDeleteEntry",
+        "tags": [
+          "Entries"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The entry was permanently deleted"
+          },
+          "400": {
+            "description": "The resource has not been soft-deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The entry does not exist, was deleted, or belongs to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge": {
+      "post": {
+        "summary": "Exchange a bearer credential for a session bridge link",
+        "operationId": "createSessionBridge",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A signed, single-use URL that signs the browser in on the security settings page when followed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth.BridgeUrlData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The account has not verified its email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/email/resend": {
+      "post": {
+        "summary": "Resend the email verification message",
+        "operationId": "emailResend",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The verification message was sent (or the address is already verified)"
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many resend attempts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user": {
+      "get": {
+        "summary": "Retrieve the currently authenticated user",
+        "operationId": "getCurrentUser",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The authenticated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/register": {
+      "post": {
+        "summary": "Register a new account and return an auth token",
+        "operationId": "register",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth.RegisterUserData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created account and its auth token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth.AuthTokenData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/two-factor-challenge": {
+      "post": {
+        "summary": "Complete the two-factor challenge with an authenticator or recovery code",
+        "operationId": "twoFactorChallenge",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth.TwoFactorChallengeData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The second factor was accepted and the credential is issued — the ticket is consumed whether the code is right or wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth.AuthTokenData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed, the code is wrong, or the ticket is missing, expired or bound to another account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many challenge attempts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/forgot-password": {
+      "post": {
+        "summary": "Request a password reset link by email",
+        "operationId": "forgotPassword",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth.ForgotPasswordData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "A reset link was sent if the address is registered — the response never reveals whether it was"
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "summary": "Sign in and return an auth token",
+        "operationId": "login",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth.LoginData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The authenticated account and its auth token, or a two-factor challenge ticket when the account has a second factor — a successful sign-in either way",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Auth.AuthTokenData"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Auth.ChallengeTicketData"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed or credentials did not match",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many sign-in attempts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/logout": {
+      "post": {
+        "summary": "Sign out of the current device",
+        "operationId": "logout",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Signed out"
+          },
+          "401": {
+            "description": "Authentication token is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorData"
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "components": {
+    "securitySchemes": {
+      "sanctum": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Anchor.AnchorData": {
+        "title": "Anchor",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "goal": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "target_date": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "arrived",
+              "archived"
+            ]
+          },
+          "written_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "goal",
+          "body",
+          "target_date",
+          "state",
+          "written_at",
+          "created_at"
+        ],
+        "additionalProperties": false
+      },
+      "Anchor.CreateData": {
+        "title": "Create",
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "body": {
+            "type": "string"
+          },
+          "target_date": {
+            "type": "string",
+            "x-date-format": "The value must match the format \"Y-m-d\".",
+            "x-date-after": "The value must be after 2026-09-05T00:00:00Z."
+          }
+        },
+        "required": [
+          "goal",
+          "body",
+          "target_date"
+        ],
+        "additionalProperties": false
+      },
+      "Anchor.UpdateData": {
+        "title": "Update",
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 255
+          },
+          "body": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "x-date-format": "The value must match the format \"Y-m-d\".",
+            "x-date-after": "The value must be after 2026-09-05T00:00:00Z."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AnchorEntry.StoreData": {
+        "title": "Store",
+        "type": "object",
+        "properties": {
+          "entry_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "entry_ids"
+        ],
+        "additionalProperties": false
+      },
+      "ApiErrorData": {
+        "title": "Api Error",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "UNAUTHENTICATED",
+              "VALIDATION_ERROR",
+              "FORBIDDEN",
+              "NOT_FOUND",
+              "RATE_LIMITED",
+              "SERVER_ERROR"
+            ]
+          },
+          "errors": {
+            "default": null,
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.AuthTokenData": {
+        "title": "Auth Token",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "title": "Current User",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "email_verified_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "avatar": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_two_factor_enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "email",
+              "is_two_factor_enabled"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "token",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.BridgeUrlData": {
+        "title": "Bridge Url",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.ChallengeTicketData": {
+        "title": "Challenge Ticket",
+        "type": "object",
+        "properties": {
+          "ticket": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.ForgotPasswordData": {
+        "title": "Forgot Password",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.LoginData": {
+        "title": "Login",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "device_name": {
+            "default": null,
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.RegisterUserData": {
+        "title": "Register User",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "password_confirmation": {
+            "type": "string"
+          },
+          "device_name": {
+            "default": null,
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "password_confirmation"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.ResetPasswordData": {
+        "title": "Reset Password",
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "password_confirmation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "password",
+          "password_confirmation"
+        ],
+        "additionalProperties": false
+      },
+      "Auth.TwoFactorChallengeData": {
+        "title": "Two Factor Challenge",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "ticket": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "device_name": {
+            "default": null,
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "email",
+          "ticket",
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "CurrentUserData": {
+        "title": "Current User",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "email_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "avatar": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "is_two_factor_enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "is_two_factor_enabled"
+        ],
+        "additionalProperties": false
+      },
+      "Entry.CreateData": {
+        "title": "Create",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3
+          },
+          "body": {
+            "type": "string",
+            "minLength": 10
+          },
+          "entry_date": {
+            "type": "string",
+            "x-date-format": "The value must match the format \"Y-m-d\"."
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "entry_date"
+        ],
+        "additionalProperties": false
+      },
+      "Entry.EntryData": {
+        "title": "Entry",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "entry_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body",
+          "entry_date",
+          "created_at"
+        ],
+        "additionalProperties": false
+      },
+      "Entry.UpdateData": {
+        "title": "Update",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 3
+          },
+          "body": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 10
+          },
+          "entry_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "x-date-format": "The value must match the format \"Y-m-d\"."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
 }
