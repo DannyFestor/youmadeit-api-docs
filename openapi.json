@@ -1872,6 +1872,12 @@
                                     "null"
                                 ],
                                 "format": "date-time"
+                            },
+                            "reflection_entry_id": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
                             }
                         },
                         "required": [
@@ -2043,6 +2049,12 @@
                             "null"
                         ],
                         "format": "date-time"
+                    },
+                    "reflection_entry_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 },
                 "required": [
@@ -2349,6 +2361,12 @@
                                                 "null"
                                             ],
                                             "format": "date-time"
+                                        },
+                                        "reflection_entry_id": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "required": [
@@ -2374,6 +2392,12 @@
                         "type": "boolean"
                     },
                     "selectedAnchorId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "selectedArrivalId": {
                         "type": [
                             "string",
                             "null"
@@ -2494,6 +2518,12 @@
                                                 "null"
                                             ],
                                             "format": "date-time"
+                                        },
+                                        "reflection_entry_id": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "required": [
@@ -2670,6 +2700,12 @@
                                                 "null"
                                             ],
                                             "format": "date-time"
+                                        },
+                                        "reflection_entry_id": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "required": [
@@ -2719,6 +2755,14 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "arrival_id": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uuid"
                     }
                 },
                 "required": [
