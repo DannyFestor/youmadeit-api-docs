@@ -732,6 +732,92 @@
                 }
             }
         },
+        "/api/v1/anchors/{anchor}/reschedule": {
+            "post": {
+                "summary": "Reschedule an anchor (move its Target Date)",
+                "operationId": "rescheduleAnchor",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "anchor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The rescheduled anchor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Anchor.AnchorData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The anchor does not exist, was deleted, or belongs to another user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Anchor.RescheduleData"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/anchors/{anchor}/witness": {
             "post": {
                 "summary": "Witness an anchor's arrival",
@@ -1805,7 +1891,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-24T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-26T00:00:00Z."
                     }
                 },
                 "required": [
@@ -1834,6 +1920,21 @@
                 },
                 "additionalProperties": false
             },
+            "Anchor.RescheduleData": {
+                "title": "Reschedule",
+                "type": "object",
+                "properties": {
+                    "target_date": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-after": "The value must be after 2026-09-26T00:00:00Z."
+                    }
+                },
+                "required": [
+                    "target_date"
+                ],
+                "additionalProperties": false
+            },
             "Anchor.UpdateData": {
                 "title": "Update",
                 "type": "object",
@@ -1850,14 +1951,6 @@
                             "string",
                             "null"
                         ]
-                    },
-                    "target_date": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-24T00:00:00Z."
                     }
                 },
                 "additionalProperties": false
