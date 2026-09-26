@@ -1146,11 +1146,26 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "The requested entry",
+                        "description": "The requested entry with its linked anchors",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Entry.EntryData"
+                                    "type": "object",
+                                    "properties": {
+                                        "entry": {
+                                            "$ref": "#/components/schemas/Entry.EntryData"
+                                        },
+                                        "anchors": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "entry",
+                                        "anchors"
+                                    ]
                                 }
                             }
                         }
@@ -2556,6 +2571,142 @@
                     "body",
                     "entry_date",
                     "created_at"
+                ],
+                "additionalProperties": false
+            },
+            "Entry.ShowData": {
+                "title": "Show",
+                "type": "object",
+                "properties": {
+                    "entry": {
+                        "title": "Entry",
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "body": {
+                                "type": "string"
+                            },
+                            "entry_date": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "anchorIDs": {
+                                "type": [
+                                    "array",
+                                    "null"
+                                ],
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "title",
+                            "body",
+                            "entry_date",
+                            "created_at"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "anchors": {
+                        "type": "array",
+                        "items": {
+                            "title": "Anchor",
+                            "type": "object",
+                            "properties": {
+                                "days_until": {
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
+                                },
+                                "id": {
+                                    "type": "string"
+                                },
+                                "goal": {
+                                    "type": "string"
+                                },
+                                "body": {
+                                    "type": "string"
+                                },
+                                "target_date": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "state": {
+                                    "type": "string",
+                                    "enum": [
+                                        "active",
+                                        "arrived",
+                                        "archived"
+                                    ]
+                                },
+                                "written_at": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "created_at": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "entries_count": {
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
+                                },
+                                "arrival": {
+                                    "title": "Arrival",
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "arrived_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "witnessed_at": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ],
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "arrived_at"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "goal",
+                                "body",
+                                "target_date",
+                                "state",
+                                "written_at",
+                                "created_at"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "required": [
+                    "entry",
+                    "anchors"
                 ],
                 "additionalProperties": false
             },
