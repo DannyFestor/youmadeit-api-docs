@@ -1034,6 +1034,102 @@
                 }
             }
         },
+        "/api/v1/entries/search": {
+            "get": {
+                "summary": "Search the user's entries by title keyword",
+                "operationId": "searchEntries",
+                "tags": [
+                    "Entries"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "description": "A keyword matched case-insensitively against the plaintext title. The encrypted body is never searched.",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1
+                        }
+                    },
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursor-paginated matching entries, ordered by entry date descending",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Entry.EntryData"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "array"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "links",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the query is missing or empty",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/entries/trashed": {
             "get": {
                 "summary": "List the user's deleted entries",
@@ -1912,7 +2008,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-26T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-27T00:00:00Z."
                     }
                 },
                 "required": [
@@ -1941,6 +2037,23 @@
                 },
                 "additionalProperties": false
             },
+            "Anchor.OptionData": {
+                "title": "Option",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "goal"
+                ],
+                "additionalProperties": false
+            },
             "Anchor.RescheduleData": {
                 "title": "Reschedule",
                 "type": "object",
@@ -1948,7 +2061,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-26T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-27T00:00:00Z."
                     }
                 },
                 "required": [
@@ -2589,6 +2702,69 @@
                     "body",
                     "entry_date",
                     "created_at"
+                ],
+                "additionalProperties": false
+            },
+            "Entry.IndexQueryData": {
+                "title": "Index Query",
+                "type": "object",
+                "properties": {
+                    "q": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "anchor": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uuid"
+                    },
+                    "from": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "x-date-format": "The value must match the format \"Y-m-d\"."
+                    },
+                    "to": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "x-date-format": "The value must match the format \"Y-m-d\"."
+                    },
+                    "group": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "anchor",
+                            "date"
+                        ]
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Entry.SearchQueryData": {
+                "title": "Search Query",
+                "type": "object",
+                "properties": {
+                    "q": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "required": [
+                    "q"
                 ],
                 "additionalProperties": false
             },
