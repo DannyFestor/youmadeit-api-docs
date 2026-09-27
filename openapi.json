@@ -158,6 +158,55 @@
                 }
             }
         },
+        "/api/v1/anchors/options": {
+            "get": {
+                "summary": "List the user's anchors as picker options",
+                "operationId": "listAnchorOptions",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Every anchor of the user, each as an id and goal, ordered by goal",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Anchor.OptionData"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/anchors/{anchor}": {
             "get": {
                 "summary": "Fetch a single anchor",
@@ -908,6 +957,45 @@
                 ],
                 "parameters": [
                     {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "description": "A keyword matched case-insensitively against the plaintext title. The encrypted body is never searched.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "anchor",
+                        "in": "query",
+                        "required": false,
+                        "description": "Only entries linked to this anchor.",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "required": false,
+                        "description": "Only entries dated on or after this calendar day.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "required": false,
+                        "description": "Only entries dated on or before this calendar day.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
                         "name": "cursor",
                         "in": "query",
                         "required": false,
@@ -959,6 +1047,16 @@
                     },
                     "403": {
                         "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: an anchor id or a date was malformed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1023,102 +1121,6 @@
                     },
                     "422": {
                         "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/entries/search": {
-            "get": {
-                "summary": "Search the user's entries by title keyword",
-                "operationId": "searchEntries",
-                "tags": [
-                    "Entries"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "q",
-                        "in": "query",
-                        "required": true,
-                        "description": "A keyword matched case-insensitively against the plaintext title. The encrypted body is never searched.",
-                        "schema": {
-                            "type": "string",
-                            "minLength": 1
-                        }
-                    },
-                    {
-                        "name": "cursor",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Cursor-paginated matching entries, ordered by entry date descending",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Entry.EntryData"
-                                            }
-                                        },
-                                        "links": {
-                                            "type": "array"
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "additionalProperties": true
-                                        }
-                                    },
-                                    "required": [
-                                        "data",
-                                        "links",
-                                        "meta"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed: the query is missing or empty",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2752,20 +2754,6 @@
                         ]
                     }
                 },
-                "additionalProperties": false
-            },
-            "Entry.SearchQueryData": {
-                "title": "Search Query",
-                "type": "object",
-                "properties": {
-                    "q": {
-                        "type": "string",
-                        "minLength": 1
-                    }
-                },
-                "required": [
-                    "q"
-                ],
                 "additionalProperties": false
             },
             "Entry.ShowData": {
