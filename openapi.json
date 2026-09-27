@@ -1243,8 +1243,9 @@
                                         },
                                         "anchors": {
                                             "type": "array",
+                                            "maxItems": 10,
                                             "items": {
-                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                                "$ref": "#/components/schemas/Entry.LinkedAnchorData"
                                             }
                                         }
                                     },
@@ -2166,6 +2167,7 @@
                 "properties": {
                     "entry_ids": {
                         "type": "array",
+                        "maxItems": 10,
                         "minItems": 1,
                         "items": {
                             "type": "string"
@@ -2825,6 +2827,23 @@
                 },
                 "additionalProperties": false
             },
+            "Entry.LinkedAnchorData": {
+                "title": "Linked Anchor",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "goal"
+                ],
+                "additionalProperties": false
+            },
             "Entry.ShowData": {
                 "title": "Show",
                 "type": "object",
@@ -2872,90 +2891,19 @@
                     "anchors": {
                         "type": "array",
                         "items": {
-                            "title": "Anchor",
+                            "title": "Linked Anchor",
                             "type": "object",
                             "properties": {
-                                "days_until": {
-                                    "type": [
-                                        "integer",
-                                        "null"
-                                    ]
-                                },
                                 "id": {
                                     "type": "string"
                                 },
                                 "goal": {
                                     "type": "string"
-                                },
-                                "body": {
-                                    "type": "string"
-                                },
-                                "target_date": {
-                                    "type": "string",
-                                    "format": "date"
-                                },
-                                "state": {
-                                    "type": "string",
-                                    "enum": [
-                                        "active",
-                                        "arrived",
-                                        "archived"
-                                    ]
-                                },
-                                "written_at": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                },
-                                "created_at": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                },
-                                "entries_count": {
-                                    "type": [
-                                        "integer",
-                                        "null"
-                                    ]
-                                },
-                                "arrival": {
-                                    "title": "Arrival",
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string"
-                                        },
-                                        "arrived_at": {
-                                            "type": "string",
-                                            "format": "date-time"
-                                        },
-                                        "witnessed_at": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "format": "date-time"
-                                        },
-                                        "reflection_entry_id": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "id",
-                                        "arrived_at"
-                                    ],
-                                    "additionalProperties": false
                                 }
                             },
                             "required": [
                                 "id",
-                                "goal",
-                                "body",
-                                "target_date",
-                                "state",
-                                "written_at",
-                                "created_at"
+                                "goal"
                             ],
                             "additionalProperties": false
                         }
@@ -2985,6 +2933,7 @@
                     },
                     "anchor_ids": {
                         "type": "array",
+                        "maxItems": 10,
                         "items": {
                             "type": "string"
                         }
@@ -3036,6 +2985,7 @@
                             "array",
                             "null"
                         ],
+                        "maxItems": 10,
                         "items": {
                             "type": "string"
                         }
