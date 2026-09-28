@@ -1461,7 +1461,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/Anchor.AnchorData"
+                                        "$ref": "#/components/schemas/Entry.LinkedAnchorOptionData"
                                     }
                                 }
                             }
@@ -2080,7 +2080,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-27T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-28T00:00:00Z."
                     }
                 },
                 "required": [
@@ -2133,7 +2133,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-27T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-28T00:00:00Z."
                     }
                 },
                 "required": [
@@ -2245,6 +2245,20 @@
                 },
                 "required": [
                     "id",
+                    "arrived_at"
+                ],
+                "additionalProperties": false
+            },
+            "Arrival.ArrivalMomentData": {
+                "title": "Arrival Moment",
+                "type": "object",
+                "properties": {
+                    "arrived_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
                     "arrived_at"
                 ],
                 "additionalProperties": false
@@ -2731,6 +2745,51 @@
                 "required": [
                     "id",
                     "goal"
+                ],
+                "additionalProperties": false
+            },
+            "Entry.LinkedAnchorOptionData": {
+                "title": "Linked Anchor Option",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "arrived",
+                            "archived"
+                        ]
+                    },
+                    "target_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "arrival": {
+                        "title": "Arrival Moment",
+                        "type": "object",
+                        "properties": {
+                            "arrived_at": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "required": [
+                            "arrived_at"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "required": [
+                    "id",
+                    "goal",
+                    "state",
+                    "target_date"
                 ],
                 "additionalProperties": false
             },
