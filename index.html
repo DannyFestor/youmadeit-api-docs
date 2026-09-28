@@ -19,7 +19,7 @@
     "paths": {
         "/api/v1/anchors": {
             "get": {
-                "summary": "List the user's anchors",
+                "summary": "List the user's active anchors",
                 "operationId": "listAnchors",
                 "tags": [
                     "Anchors"
@@ -36,19 +36,6 @@
                         "required": false,
                         "schema": {
                             "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "active",
-                                "arrived",
-                                "archived"
-                            ]
                         }
                     }
                 ],
@@ -159,6 +146,234 @@
                     },
                     "422": {
                         "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/anchors/active": {
+            "get": {
+                "summary": "List the user's active anchors",
+                "operationId": "listActiveAnchors",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursor-paginated results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "array"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "links",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/anchors/arrived": {
+            "get": {
+                "summary": "List the user's arrived anchors",
+                "operationId": "listArrivedAnchors",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursor-paginated results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "array"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "links",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/anchors/archived": {
+            "get": {
+                "summary": "List the user's archived anchors",
+                "operationId": "listArchivedAnchors",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursor-paginated results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "array"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "links",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2029,6 +2244,10 @@
                         "type": "string",
                         "format": "date-time"
                     },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
                     "entries_count": {
                         "type": [
                             "integer",
@@ -2074,7 +2293,8 @@
                     "target_date",
                     "state",
                     "written_at",
-                    "created_at"
+                    "created_at",
+                    "updated_at"
                 ],
                 "additionalProperties": false
             },
@@ -2100,25 +2320,6 @@
                     "body",
                     "target_date"
                 ],
-                "additionalProperties": false
-            },
-            "Anchor.IndexQueryData": {
-                "title": "Index Query",
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "default": null,
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "enum": [
-                            "active",
-                            "arrived",
-                            "archived"
-                        ]
-                    }
-                },
                 "additionalProperties": false
             },
             "Anchor.OptionData": {
