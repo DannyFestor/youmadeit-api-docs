@@ -718,6 +718,99 @@
             }
         },
         "/api/v1/anchors/{anchor}/entries": {
+            "get": {
+                "summary": "List the entries attached to an anchor",
+                "operationId": "listAnchorEntries",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "anchor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursor-paginated results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "A cursor page of the entries attached to the anchor; `meta.next_cursor` continues the list.",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Entry.EntryData"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "array"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "links",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The anchor does not exist, was deleted, or belongs to another user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "summary": "Attach entries to an anchor",
                 "operationId": "attachEntriesToAnchor",
