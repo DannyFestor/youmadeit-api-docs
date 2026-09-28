@@ -385,6 +385,82 @@
                 }
             }
         },
+        "/api/v1/anchors/trashed": {
+            "get": {
+                "summary": "List the user's deleted anchors",
+                "operationId": "listTrashedAnchors",
+                "tags": [
+                    "Anchors"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cursor-paginated results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "array"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "links",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/anchors/options": {
             "get": {
                 "summary": "List the user's anchors as picker options",
