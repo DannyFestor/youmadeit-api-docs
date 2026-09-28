@@ -2625,7 +2625,7 @@
                     "anchors": {
                         "type": "array",
                         "items": {
-                            "title": "Anchor Option",
+                            "title": "Linked Anchor Option",
                             "type": "object",
                             "properties": {
                                 "id": {
@@ -2634,14 +2634,37 @@
                                 "goal": {
                                     "type": "string"
                                 },
+                                "state": {
+                                    "type": "string",
+                                    "enum": [
+                                        "active",
+                                        "arrived",
+                                        "archived"
+                                    ]
+                                },
                                 "target_date": {
                                     "type": "string",
                                     "format": "date"
+                                },
+                                "arrival": {
+                                    "title": "Arrival Moment",
+                                    "type": "object",
+                                    "properties": {
+                                        "arrived_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "required": [
+                                        "arrived_at"
+                                    ],
+                                    "additionalProperties": false
                                 }
                             },
                             "required": [
                                 "id",
                                 "goal",
+                                "state",
                                 "target_date"
                             ],
                             "additionalProperties": false
