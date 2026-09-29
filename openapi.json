@@ -2469,7 +2469,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-28T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-29T00:00:00Z."
                     }
                 },
                 "required": [
@@ -2503,7 +2503,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-28T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-29T00:00:00Z."
                     }
                 },
                 "required": [
@@ -3271,7 +3271,8 @@
                     },
                     "entry_date": {
                         "type": "string",
-                        "x-date-format": "The value must match the format \"Y-m-d\"."
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-29T00:00:00Z."
                     },
                     "anchor_ids": {
                         "type": "array",
@@ -3320,7 +3321,8 @@
                             "string",
                             "null"
                         ],
-                        "x-date-format": "The value must match the format \"Y-m-d\"."
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-29T00:00:00Z."
                     },
                     "anchor_ids": {
                         "type": [
