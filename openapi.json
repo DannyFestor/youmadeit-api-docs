@@ -2469,7 +2469,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-29T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-30T00:00:00Z."
                     }
                 },
                 "required": [
@@ -2503,7 +2503,7 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-29T00:00:00Z."
+                        "x-date-after": "The value must be after 2026-09-30T00:00:00Z."
                     }
                 },
                 "required": [
@@ -2863,28 +2863,6 @@
                 ],
                 "additionalProperties": false
             },
-            "Entry.AnchorOptionData": {
-                "title": "Anchor Option",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "goal": {
-                        "type": "string"
-                    },
-                    "target_date": {
-                        "type": "string",
-                        "format": "date"
-                    }
-                },
-                "required": [
-                    "id",
-                    "goal",
-                    "target_date"
-                ],
-                "additionalProperties": false
-            },
             "Entry.CreateData": {
                 "title": "Create",
                 "type": "object",
@@ -2892,7 +2870,7 @@
                     "anchors": {
                         "type": "array",
                         "items": {
-                            "title": "Anchor Option",
+                            "title": "Linked Anchor Option",
                             "type": "object",
                             "properties": {
                                 "id": {
@@ -2901,14 +2879,37 @@
                                 "goal": {
                                     "type": "string"
                                 },
+                                "state": {
+                                    "type": "string",
+                                    "enum": [
+                                        "active",
+                                        "arrived",
+                                        "archived"
+                                    ]
+                                },
                                 "target_date": {
                                     "type": "string",
                                     "format": "date"
+                                },
+                                "arrival": {
+                                    "title": "Arrival Moment",
+                                    "type": "object",
+                                    "properties": {
+                                        "arrived_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "required": [
+                                        "arrived_at"
+                                    ],
+                                    "additionalProperties": false
                                 }
                             },
                             "required": [
                                 "id",
                                 "goal",
+                                "state",
                                 "target_date"
                             ],
                             "additionalProperties": false
@@ -3272,7 +3273,7 @@
                     "entry_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-29T00:00:00Z."
+                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-30T00:00:00Z."
                     },
                     "anchor_ids": {
                         "type": "array",
@@ -3322,7 +3323,7 @@
                             "null"
                         ],
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-29T00:00:00Z."
+                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-30T00:00:00Z."
                     },
                     "anchor_ids": {
                         "type": [
