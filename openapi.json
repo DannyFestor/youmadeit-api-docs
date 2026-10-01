@@ -2469,13 +2469,19 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-30T00:00:00Z."
+                        "x-date-after": "The value must be after the value of local_day."
+                    },
+                    "local_day": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-local-day-window": "The value must be within one day of today."
                     }
                 },
                 "required": [
                     "goal",
                     "body",
-                    "target_date"
+                    "target_date",
+                    "local_day"
                 ],
                 "additionalProperties": false
             },
@@ -2503,11 +2509,17 @@
                     "target_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after 2026-09-30T00:00:00Z."
+                        "x-date-after": "The value must be after the value of local_day."
+                    },
+                    "local_day": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-local-day-window": "The value must be within one day of today."
                     }
                 },
                 "required": [
-                    "target_date"
+                    "target_date",
+                    "local_day"
                 ],
                 "additionalProperties": false
             },
@@ -3273,7 +3285,12 @@
                     "entry_date": {
                         "type": "string",
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-30T00:00:00Z."
+                        "x-date-before-or-equal": "The value must be before or equal to the value of local_day."
+                    },
+                    "local_day": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-local-day-window": "The value must be within one day of today."
                     },
                     "anchor_ids": {
                         "type": "array",
@@ -3295,6 +3312,7 @@
                     "title",
                     "body",
                     "entry_date",
+                    "local_day",
                     "anchor_ids"
                 ],
                 "additionalProperties": false
@@ -3323,7 +3341,15 @@
                             "null"
                         ],
                         "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-before-or-equal": "The value must be before or equal to 2026-09-30T00:00:00Z."
+                        "x-date-before-or-equal": "The value must be before or equal to the value of local_day."
+                    },
+                    "local_day": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-local-day-window": "The value must be within one day of today."
                     },
                     "anchor_ids": {
                         "type": [
