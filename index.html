@@ -3139,6 +3139,30 @@
                     },
                     "is_two_factor_enabled": {
                         "type": "boolean"
+                    },
+                    "locale": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "en",
+                            "de",
+                            "ja",
+                            null
+                        ]
+                    },
+                    "theme": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "system",
+                            "light",
+                            "dark",
+                            null
+                        ]
                     }
                 },
                 "required": [
@@ -3284,7 +3308,8 @@
                         ],
                         "enum": [
                             "anchor",
-                            "date"
+                            "date",
+                            null
                         ]
                     }
                 },
