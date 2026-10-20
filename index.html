@@ -2688,6 +2688,72 @@
                     }
                 }
             }
+        },
+        "/api/v1/you/preferences/theme": {
+            "put": {
+                "summary": "Keep day or night on the user's account",
+                "operationId": "updateTheme",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Preferences.UpdateThemeData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The authenticated user, with the theme kept",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the theme is neither light nor dark",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -3507,6 +3573,23 @@
                         }
                     }
                 },
+                "additionalProperties": false
+            },
+            "Preferences.UpdateThemeData": {
+                "title": "Update Theme",
+                "type": "object",
+                "properties": {
+                    "theme": {
+                        "type": "string",
+                        "enum": [
+                            "light",
+                            "dark"
+                        ]
+                    }
+                },
+                "required": [
+                    "theme"
+                ],
                 "additionalProperties": false
             }
         },
