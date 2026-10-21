@@ -120,16 +120,6 @@
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -167,16 +157,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -301,16 +281,6 @@
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -411,16 +381,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -535,16 +495,6 @@
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -584,9 +534,50 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/v1/anchors/seal": {
+            "post": {
+                "summary": "Seal an anchor from the Arrival Interview, once per seal id; with no bearer token, the account fields are required and the seal creates the account",
+                "operationId": "sealAnchor",
+                "tags": [
+                    "Anchors"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Anchor.SealData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The sealed anchor — the one already sealed when the seal id was seen before — and a token only when the seal created the account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Anchor.SealedAnchorData"
+                                }
+                            }
+                        }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
+                    "422": {
+                        "description": "Validation failed, or the seal was refused and nothing was created: UNDER_SIXTEEN (the birth month and year are under sixteen on the Local Day and are not stored), EMAIL_TAKEN (the address has an account; sign in and replay the seal id) or SEAL_REJECTED",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many accounts started from this network in the last hour; only seals without a bearer token count",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -701,16 +692,6 @@
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -750,16 +731,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -832,16 +803,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -899,16 +860,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -957,16 +908,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1101,16 +1042,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1170,16 +1101,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1265,16 +1186,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The anchor or entry does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1326,16 +1237,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1410,16 +1311,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1486,16 +1377,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1554,16 +1435,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1825,16 +1696,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "422": {
                         "description": "Validation failed: an anchor id or a date was malformed",
                         "content": {
@@ -1881,16 +1742,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2015,16 +1866,6 @@
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -2064,16 +1905,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2146,16 +1977,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The entry does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -2205,16 +2026,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2282,16 +2093,6 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "The entry does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -2343,16 +2144,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2417,8 +2208,42 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "The account has not verified its email address",
+                    "404": {
+                        "description": "The entry does not exist, was deleted, or belongs to another user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/feedback": {
+            "post": {
+                "summary": "Send feedback without an account",
+                "operationId": "submitPublicFeedback",
+                "tags": [
+                    "Feedback"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Feedback.SubmitData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "The feedback was received. Only its category, message and language are kept, and no reply is sent. A filled website field, or a started_at under 3 seconds before sending, is dropped with this same answer"
+                    },
+                    "422": {
+                        "description": "Validation failed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2427,8 +2252,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "The entry does not exist, was deleted, or belongs to another user",
+                    "429": {
+                        "description": "Too much feedback sent from this network in the last hour",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2590,7 +2415,17 @@
                         }
                     },
                     "422": {
-                        "description": "Validation failed",
+                        "description": "Validation failed, or the birth month and year are under sixteen on the Local Day (code UNDER_SIXTEEN; no account is made and the birth month and year are not stored)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many accounts started from this network in the last hour",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2724,16 +2559,6 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2898,6 +2723,116 @@
                 ],
                 "additionalProperties": false
             },
+            "Anchor.SealData": {
+                "title": "Seal",
+                "type": "object",
+                "properties": {
+                    "seal_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "email": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "password": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "password_confirmation": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "birth_month": {
+                        "default": null,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "birth_year": {
+                        "default": null,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "website": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "started_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "goal": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "target_date": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-after": "The value must be after the value of local_day."
+                    },
+                    "local_day": {
+                        "type": "string",
+                        "x-date-format": "The value must match the format \"Y-m-d\".",
+                        "x-date-local-day-window": "The value must be within one day of today."
+                    }
+                },
+                "required": [
+                    "seal_id",
+                    "goal",
+                    "body",
+                    "target_date",
+                    "local_day"
+                ],
+                "additionalProperties": false
+            },
+            "Anchor.SealedAnchorData": {
+                "title": "Sealed Anchor",
+                "type": "object",
+                "properties": {
+                    "anchor": {
+                        "$ref": "#/components/schemas/Anchor.AnchorData"
+                    },
+                    "token": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "anchor"
+                ],
+                "additionalProperties": false
+            },
             "Anchor.UpdateData": {
                 "title": "Update",
                 "type": "object",
@@ -2952,7 +2887,10 @@
                             "FORBIDDEN",
                             "NOT_FOUND",
                             "RATE_LIMITED",
-                            "SERVER_ERROR"
+                            "SERVER_ERROR",
+                            "UNDER_SIXTEEN",
+                            "EMAIL_TAKEN",
+                            "SEAL_REJECTED"
                         ]
                     },
                     "errors": {
@@ -3116,6 +3054,12 @@
                     "password_confirmation": {
                         "type": "string"
                     },
+                    "birth_month": {
+                        "type": "integer"
+                    },
+                    "birth_year": {
+                        "type": "integer"
+                    },
                     "device_name": {
                         "default": null,
                         "type": [
@@ -3128,7 +3072,9 @@
                     "name",
                     "email",
                     "password",
-                    "password_confirmation"
+                    "password_confirmation",
+                    "birth_month",
+                    "birth_year"
                 ],
                 "additionalProperties": false
             },
@@ -3573,6 +3519,122 @@
                         }
                     }
                 },
+                "additionalProperties": false
+            },
+            "Feedback.SubmitData": {
+                "title": "Submit",
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "bug",
+                            "idea",
+                            "other"
+                        ]
+                    },
+                    "body": {
+                        "type": "string",
+                        "maxLength": 5000
+                    },
+                    "started_at": {
+                        "type": "string"
+                    },
+                    "website": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "category",
+                    "body",
+                    "started_at"
+                ],
+                "additionalProperties": false
+            },
+            "Localization.LanguageSuggestionData": {
+                "title": "Language Suggestion",
+                "type": "object",
+                "properties": {
+                    "locale": {
+                        "type": "string",
+                        "enum": [
+                            "en",
+                            "de",
+                            "ja"
+                        ]
+                    },
+                    "line": {
+                        "type": "string"
+                    },
+                    "action": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "locale",
+                    "line",
+                    "action",
+                    "url"
+                ],
+                "additionalProperties": false
+            },
+            "Localization.PageAlternateData": {
+                "title": "Page Alternate",
+                "type": "object",
+                "properties": {
+                    "locale": {
+                        "type": "string",
+                        "enum": [
+                            "en",
+                            "de",
+                            "ja"
+                        ]
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "locale",
+                    "url"
+                ],
+                "additionalProperties": false
+            },
+            "Localization.PageLanguagesData": {
+                "title": "Page Languages",
+                "type": "object",
+                "properties": {
+                    "alternates": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Localization.PageAlternateData"
+                        }
+                    },
+                    "default_url": {
+                        "type": "string"
+                    },
+                    "suggestion": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Localization.LanguageSuggestionData"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "alternates",
+                    "default_url"
+                ],
                 "additionalProperties": false
             },
             "Preferences.UpdateThemeData": {
