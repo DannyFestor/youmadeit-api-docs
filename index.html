@@ -50,7 +50,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                                "$ref": "#/components/schemas/Anchor.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -122,60 +122,6 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "summary": "Create an anchor from the Arrival Interview",
-                "operationId": "createAnchor",
-                "tags": [
-                    "Anchors"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Anchor.CreateData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "The sealed anchor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Anchor.AnchorData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
         "/api/v1/anchors/active": {
@@ -211,7 +157,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                                "$ref": "#/components/schemas/Anchor.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -318,7 +264,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                                "$ref": "#/components/schemas/Anchor.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -425,7 +371,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                                "$ref": "#/components/schemas/Anchor.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -591,7 +537,7 @@
         },
         "/api/v1/anchors/trashed": {
             "get": {
-                "summary": "List the user's deleted anchors",
+                "summary": "List the user's deleted anchors, most recently deleted first",
                 "operationId": "listTrashedAnchors",
                 "tags": [
                     "Anchors"
@@ -622,7 +568,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Anchor.AnchorData"
+                                                "$ref": "#/components/schemas/Anchor.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -720,11 +666,11 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "The requested anchor",
+                        "description": "The requested anchor with the day it last moved from",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Anchor.AnchorData"
+                                    "$ref": "#/components/schemas/Anchor.ShowData"
                                 }
                             }
                         }
@@ -927,12 +873,10 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/v1/anchors/{anchor}/entries": {
-            "get": {
-                "summary": "List the entries attached to an anchor",
-                "operationId": "listAnchorEntries",
+            },
+            "delete": {
+                "summary": "Unarchive an anchor (it returns to what its Target Date says)",
+                "operationId": "unarchiveAnchor",
                 "tags": [
                     "Anchors"
                 ],
@@ -946,14 +890,6 @@
                         "name": "anchor",
                         "in": "path",
                         "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cursor",
-                        "in": "query",
-                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -961,73 +897,11 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Cursor-paginated results",
+                        "description": "The unarchived anchor",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "description": "A cursor page of the entries attached to the anchor; `meta.next_cursor` continues the list.",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Entry.EntryData"
-                                            }
-                                        },
-                                        "links": {
-                                            "type": "array",
-                                            "maxItems": 0,
-                                            "description": "Always empty for cursor pages; navigation lives in `meta`."
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "properties": {
-                                                "path": {
-                                                    "type": "string"
-                                                },
-                                                "per_page": {
-                                                    "type": "integer"
-                                                },
-                                                "next_cursor": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "next_page_url": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "prev_cursor": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                },
-                                                "prev_page_url": {
-                                                    "type": [
-                                                        "string",
-                                                        "null"
-                                                    ]
-                                                }
-                                            },
-                                            "required": [
-                                                "path",
-                                                "per_page",
-                                                "next_cursor",
-                                                "next_page_url",
-                                                "prev_cursor",
-                                                "prev_page_url"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "data",
-                                        "links",
-                                        "meta"
-                                    ]
+                                    "$ref": "#/components/schemas/Anchor.AnchorData"
                                 }
                             }
                         }
@@ -1044,150 +918,6 @@
                     },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "summary": "Attach entries to an anchor",
-                "operationId": "attachEntriesToAnchor",
-                "tags": [
-                    "Anchors"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "anchor",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AnchorEntry.StoreData"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "The entries were attached to the anchor"
-                    },
-                    "400": {
-                        "description": "None of the requested entries could be attached",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The anchor does not exist, was deleted, or belongs to another user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/anchors/{anchor}/entries/{entry}": {
-            "delete": {
-                "summary": "Detach an entry from an anchor",
-                "operationId": "detachEntryFromAnchor",
-                "tags": [
-                    "Anchors"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "anchor",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "entry",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "The entry was detached from the anchor"
-                    },
-                    "400": {
-                        "description": "The entry is not attached to the anchor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The anchor or entry does not exist, was deleted, or belongs to another user",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1594,18 +1324,6 @@
                         }
                     },
                     {
-                        "name": "group",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "anchor",
-                                "date"
-                            ]
-                        }
-                    },
-                    {
                         "name": "cursor",
                         "in": "query",
                         "required": false,
@@ -1625,7 +1343,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Entry.EntryData"
+                                                "$ref": "#/components/schemas/Entry.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -1765,7 +1483,7 @@
         },
         "/api/v1/entries/trashed": {
             "get": {
-                "summary": "List the user's deleted entries",
+                "summary": "List the user's deleted entries, most recently deleted first",
                 "operationId": "listTrashedEntries",
                 "tags": [
                     "Entries"
@@ -1796,7 +1514,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Entry.EntryData"
+                                                "$ref": "#/components/schemas/Entry.ListItemData"
                                             }
                                         },
                                         "links": {
@@ -2047,65 +1765,6 @@
                 }
             }
         },
-        "/api/v1/entries/{entry}/anchors": {
-            "get": {
-                "summary": "List the anchors linked to an entry",
-                "operationId": "listEntryAnchors",
-                "tags": [
-                    "Entries"
-                ],
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "entry",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The anchors linked to the entry in every state, ordered by goal",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Entry.LinkedAnchorOptionData"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Authentication token is missing or invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The entry does not exist, was deleted, or belongs to another user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorData"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/entries/{entry}/force": {
             "delete": {
                 "summary": "Force delete an entry",
@@ -2288,6 +1947,42 @@
                     },
                     "422": {
                         "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home": {
+            "get": {
+                "summary": "Fetch everything Home shows in one read: the writer's closest three active anchors, closest first, with their entry counts, and the three most recent entries by entry date with the totals; the three newest arrivals; the memory items, a letter to reread picked from the Local Day and an entry from this month-day in an earlier year; and whether the address is verified and the verify strip dismissed",
+                "operationId": "getHome",
+                "tags": [
+                    "Home"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The writer's Home",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Home.HomeData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2579,6 +2274,35 @@
                     }
                 }
             }
+        },
+        "/api/v1/you/verify-prompt/dismissal": {
+            "post": {
+                "summary": "Dismiss Home's verify strip for good, on every device",
+                "operationId": "dismissVerifyPrompt",
+                "tags": [
+                    "Home"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The strip stays dismissed"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -2641,6 +2365,22 @@
                                 "type": "null"
                             }
                         ]
+                    },
+                    "deleted_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "archived_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     }
                 },
                 "required": [
@@ -2655,33 +2395,87 @@
                 ],
                 "additionalProperties": false
             },
-            "Anchor.CreateData": {
-                "title": "Create",
+            "Anchor.ListItemData": {
+                "title": "List Item",
                 "type": "object",
                 "properties": {
-                    "goal": {
-                        "type": "string",
-                        "maxLength": 255
+                    "days_until": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
-                    "body": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "goal": {
                         "type": "string"
                     },
                     "target_date": {
                         "type": "string",
-                        "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-after": "The value must be after the value of local_day."
+                        "format": "date"
                     },
-                    "local_day": {
+                    "state": {
                         "type": "string",
-                        "x-date-format": "The value must match the format \"Y-m-d\".",
-                        "x-date-local-day-window": "The value must be within one day of today."
+                        "enum": [
+                            "active",
+                            "arrived",
+                            "archived"
+                        ]
+                    },
+                    "written_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "entries_count": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "arrival": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Arrival.ArrivalData"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "deleted_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "archived_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     }
                 },
                 "required": [
+                    "id",
                     "goal",
-                    "body",
                     "target_date",
-                    "local_day"
+                    "state",
+                    "written_at",
+                    "created_at",
+                    "updated_at"
                 ],
                 "additionalProperties": false
             },
@@ -2833,6 +2627,26 @@
                 ],
                 "additionalProperties": false
             },
+            "Anchor.ShowData": {
+                "title": "Show",
+                "type": "object",
+                "properties": {
+                    "anchor": {
+                        "$ref": "#/components/schemas/Anchor.AnchorData"
+                    },
+                    "previous_target_date": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    }
+                },
+                "required": [
+                    "anchor"
+                ],
+                "additionalProperties": false
+            },
             "Anchor.UpdateData": {
                 "title": "Update",
                 "type": "object",
@@ -2851,24 +2665,6 @@
                         ]
                     }
                 },
-                "additionalProperties": false
-            },
-            "AnchorEntry.StoreData": {
-                "title": "Store",
-                "type": "object",
-                "properties": {
-                    "entry_ids": {
-                        "type": "array",
-                        "maxItems": 10,
-                        "minItems": 1,
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "required": [
-                    "entry_ids"
-                ],
                 "additionalProperties": false
             },
             "ApiErrorData": {
@@ -3192,11 +2988,8 @@
                     "anchors": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/Entry.LinkedAnchorOptionData"
+                            "$ref": "#/components/schemas/Anchor.OptionData"
                         }
-                    },
-                    "isAnchorFirstEntry": {
-                        "type": "boolean"
                     },
                     "selectedAnchorId": {
                         "type": [
@@ -3212,8 +3005,7 @@
                     }
                 },
                 "required": [
-                    "anchors",
-                    "isAnchorFirstEntry"
+                    "anchors"
                 ],
                 "additionalProperties": false
             },
@@ -3227,7 +3019,7 @@
                     "anchors": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/Entry.LinkedAnchorOptionData"
+                            "$ref": "#/components/schemas/Anchor.OptionData"
                         }
                     }
                 },
@@ -3266,6 +3058,14 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "deleted_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     }
                 },
                 "required": [
@@ -3274,6 +3074,28 @@
                     "body",
                     "entry_date",
                     "created_at"
+                ],
+                "additionalProperties": false
+            },
+            "Entry.EntryNeighborData": {
+                "title": "Entry Neighbor",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "entry_date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "entry_date"
                 ],
                 "additionalProperties": false
             },
@@ -3311,42 +3133,8 @@
                             "null"
                         ],
                         "x-date-format": "The value must match the format \"Y-m-d\"."
-                    },
-                    "group": {
-                        "default": null,
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "enum": [
-                            "anchor",
-                            "date",
-                            null
-                        ]
                     }
                 },
-                "additionalProperties": false
-            },
-            "Entry.LinkableEntryOptionData": {
-                "title": "Linkable Entry Option",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "entry_date": {
-                        "type": "string",
-                        "format": "date"
-                    }
-                },
-                "required": [
-                    "id",
-                    "title",
-                    "entry_date"
-                ],
                 "additionalProperties": false
             },
             "Entry.LinkedAnchorData": {
@@ -3366,44 +3154,47 @@
                 ],
                 "additionalProperties": false
             },
-            "Entry.LinkedAnchorOptionData": {
-                "title": "Linked Anchor Option",
+            "Entry.ListItemData": {
+                "title": "List Item",
                 "type": "object",
                 "properties": {
                     "id": {
                         "type": "string"
                     },
-                    "goal": {
+                    "title": {
                         "type": "string"
                     },
-                    "state": {
-                        "type": "string",
-                        "enum": [
-                            "active",
-                            "arrived",
-                            "archived"
-                        ]
-                    },
-                    "target_date": {
+                    "entry_date": {
                         "type": "string",
                         "format": "date"
                     },
-                    "arrival": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Arrival.ArrivalMomentData"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ]
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "anchorIDs": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "deleted_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     }
                 },
                 "required": [
                     "id",
-                    "goal",
-                    "state",
-                    "target_date"
+                    "title",
+                    "entry_date",
+                    "created_at"
                 ],
                 "additionalProperties": false
             },
@@ -3419,6 +3210,26 @@
                         "items": {
                             "$ref": "#/components/schemas/Entry.LinkedAnchorData"
                         }
+                    },
+                    "previous": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Entry.EntryNeighborData"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "next": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Entry.EntryNeighborData"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     }
                 },
                 "required": [
@@ -3555,6 +3366,129 @@
                 ],
                 "additionalProperties": false
             },
+            "Home.HomeData": {
+                "title": "Home",
+                "type": "object",
+                "properties": {
+                    "anchors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Anchor.ListItemData"
+                        }
+                    },
+                    "anchors_total": {
+                        "type": "integer"
+                    },
+                    "recent_entries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Entry.EntryNeighborData"
+                        }
+                    },
+                    "entries_total": {
+                        "type": "integer"
+                    },
+                    "arrivals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Home.RecentArrivalData"
+                        }
+                    },
+                    "memory_letter": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Home.MemoryLetterData"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "memory_entry": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Entry.EntryNeighborData"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "verification": {
+                        "$ref": "#/components/schemas/Home.VerificationData"
+                    }
+                },
+                "required": [
+                    "anchors",
+                    "anchors_total",
+                    "recent_entries",
+                    "entries_total",
+                    "arrivals",
+                    "verification"
+                ],
+                "additionalProperties": false
+            },
+            "Home.MemoryLetterData": {
+                "title": "Memory Letter",
+                "type": "object",
+                "properties": {
+                    "anchor_id": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string"
+                    },
+                    "written_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "anchor_id",
+                    "goal",
+                    "written_at"
+                ],
+                "additionalProperties": false
+            },
+            "Home.RecentArrivalData": {
+                "title": "Recent Arrival",
+                "type": "object",
+                "properties": {
+                    "anchor_id": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string"
+                    },
+                    "arrived_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "anchor_id",
+                    "goal",
+                    "arrived_at"
+                ],
+                "additionalProperties": false
+            },
+            "Home.VerificationData": {
+                "title": "Verification",
+                "type": "object",
+                "properties": {
+                    "email_verified": {
+                        "type": "boolean"
+                    },
+                    "prompt_dismissed": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "email_verified",
+                    "prompt_dismissed"
+                ],
+                "additionalProperties": false
+            },
             "Localization.LanguageSuggestionData": {
                 "title": "Language Suggestion",
                 "type": "object",
@@ -3651,6 +3585,28 @@
                 },
                 "required": [
                     "theme"
+                ],
+                "additionalProperties": false
+            },
+            "entry-neighbor": {
+                "title": "Entry Neighbor",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "entry_date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "entry_date"
                 ],
                 "additionalProperties": false
             }
