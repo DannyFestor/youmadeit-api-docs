@@ -5,6 +5,141 @@
         "version": "0.0.0"
     },
     "paths": {
+        "/api/v1/account": {
+            "delete": {
+                "summary": "Delete the account now, while it is set to be deleted: the account and everything in it, its Photo and every credential, this one included, are erased before the answer",
+                "operationId": "deleteAccountNow",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The account and everything in it are erased"
+                    },
+                    "400": {
+                        "description": "The account is not set to be deleted; nothing is erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/account/deletion": {
+            "post": {
+                "summary": "Set the account to be deleted in one month and sign out every device and browser, this one included; until then every other authenticated call answers ACCOUNT_PENDING_DELETION",
+                "operationId": "requestAccountDeletion",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account.Deletion.RequestData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "The account is set to be deleted and every credential is revoked"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the current password isn't right",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many wrong current passwords in the last minute or hour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Keep the account: it is no longer set to be deleted and every operation answers again",
+                "operationId": "cancelAccountDeletion",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The account is kept"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/anchors": {
             "get": {
                 "summary": "List the user's active anchors",
@@ -101,6 +236,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -215,6 +360,16 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -315,6 +470,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -429,6 +594,16 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -468,6 +643,16 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -496,6 +681,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Anchor.SealedAnchorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
                                 }
                             }
                         }
@@ -626,6 +821,16 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -665,6 +870,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -737,6 +952,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -786,6 +1011,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -850,6 +1085,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -896,6 +1141,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -955,6 +1210,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1029,6 +1294,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1087,6 +1362,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1161,6 +1446,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The anchor does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1188,7 +1483,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "A signed, single-use URL that signs the browser in on the security settings page when followed",
+                        "description": "A signed, single-use URL that signs the browser in on Security when followed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1208,7 +1503,7 @@
                         }
                     },
                     "403": {
-                        "description": "The account has not verified its email address",
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased. The account has not verified its email address",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1238,6 +1533,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1402,6 +1707,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Validation failed: an anchor id or a date was malformed",
                         "content": {
@@ -1448,6 +1763,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1572,6 +1897,16 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1611,6 +1946,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1683,6 +2028,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The entry does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1732,6 +2087,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1799,6 +2164,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The entry does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1855,6 +2230,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "The entry does not exist, was deleted, or belongs to another user",
                         "content": {
@@ -1880,7 +2265,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Feedback.SubmitData"
+                                "$ref": "#/components/schemas/Feedback.PublicSubmitData"
                             }
                         }
                     }
@@ -1971,6 +2356,16 @@
                     },
                     "401": {
                         "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2203,6 +2598,424 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/devices": {
+            "get": {
+                "summary": "List every browser and app signed in to the user's account: browsers active within the session lifetime, newest first, then every app, most recently used first. The calling app is marked current",
+                "operationId": "listDevices",
+                "tags": [
+                    "Devices"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Every browser and app signed in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Device.DeviceData"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Sign out every browser and app but the calling one",
+                "operationId": "revokeOtherDevices",
+                "tags": [
+                    "Devices"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Every other browser and app is signed out"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/devices/sessions/{id}": {
+            "delete": {
+                "summary": "Sign out one browser, named by the handle listDevices gave it",
+                "operationId": "revokeSession",
+                "tags": [
+                    "Devices"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The browser is signed out"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No browser of the user's has that handle",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/devices/tokens/{id}": {
+            "delete": {
+                "summary": "Sign out one app; signing out the calling app is an ordinary sign-out",
+                "operationId": "revokeToken",
+                "tags": [
+                    "Devices"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The app is signed out"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No app of the user's has that id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/feedback": {
+            "post": {
+                "summary": "Send feedback from You, kept with the writer's account",
+                "operationId": "submitFeedback",
+                "tags": [
+                    "Feedback"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Feedback.WriterSubmitData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "The feedback was received and kept with the account, and no reply is sent. A filled website field is dropped with this same answer"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too much feedback sent from this account in the last hour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/password": {
+            "put": {
+                "summary": "Change the password; this device stays signed in and every other device and browser is signed out",
+                "operationId": "changePassword",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Password.ChangeData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "The password is changed and every other credential is revoked"
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased. The account has not verified its email address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the current password isn't right, or the new password is missing, too weak or doesn't match",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many wrong current passwords in the last minute or hour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/preferences": {
+            "patch": {
+                "summary": "Save day or night and the language on the user's account",
+                "operationId": "updatePreferences",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Preferences.UpdateData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The authenticated user, with the preferences saved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the theme or the locale is not one the app offers",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2250,8 +3063,280 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Validation failed: the theme is neither light nor dark",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/profile": {
+            "patch": {
+                "summary": "Change the name on the user's profile",
+                "operationId": "updateProfile",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profile.UpdateData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The authenticated user, with the new name",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the name is empty or longer than 255 characters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/profile/avatar": {
+            "post": {
+                "summary": "Upload the user's Photo, framed by an optional square crop box",
+                "operationId": "uploadAvatar",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profile.Avatar.UploadData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The authenticated user, with the new Photo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "description": "The request is larger than the server accepts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the file is over 10 MB, not a JPG, PNG, WebP or HEIC photo, smaller than 256 px on a side, or the crop box is missing a side",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Remove the user's Photo",
+                "operationId": "deleteAvatar",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The authenticated user, with no Photo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/you/profile/email": {
+            "put": {
+                "summary": "Change the email at once; it is unverified until the link sent to the new address is opened",
+                "operationId": "changeEmail",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profile.Email.ChangeData"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The authenticated user, with the new and unverified email",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserData"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: the address is not an email address or is already in use, or the current password isn't right",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many email changes from this account, or to this address, in the last hour. Too many wrong current passwords in the last minute or hour",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2288,6 +3373,16 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "The account is set to be deleted (ACCOUNT_PENDING_DELETION); `deletes_at` is when it will be erased",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2295,6 +3390,19 @@
     },
     "components": {
         "schemas": {
+            "Account.Deletion.RequestData": {
+                "title": "Request",
+                "type": "object",
+                "properties": {
+                    "current_password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "current_password"
+                ],
+                "additionalProperties": false
+            },
             "Anchor.AnchorData": {
                 "title": "Anchor",
                 "type": "object",
@@ -2670,11 +3778,13 @@
                             "BAD_REQUEST",
                             "FORBIDDEN",
                             "NOT_FOUND",
+                            "PAYLOAD_TOO_LARGE",
                             "RATE_LIMITED",
                             "SERVER_ERROR",
                             "UNDER_SIXTEEN",
                             "EMAIL_TAKEN",
-                            "SEAL_REJECTED"
+                            "SEAL_REJECTED",
+                            "ACCOUNT_PENDING_DELETION"
                         ]
                     },
                     "errors": {
@@ -2689,6 +3799,14 @@
                                 "type": "string"
                             }
                         }
+                    },
+                    "deletes_at": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     }
                 },
                 "required": [
@@ -2907,6 +4025,27 @@
                 ],
                 "additionalProperties": false
             },
+            "AvatarData": {
+                "title": "Avatar",
+                "type": "object",
+                "properties": {
+                    "small": {
+                        "type": "string"
+                    },
+                    "medium": {
+                        "type": "string"
+                    },
+                    "large": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "small",
+                    "medium",
+                    "large"
+                ],
+                "additionalProperties": false
+            },
             "CurrentUserData": {
                 "title": "Current User",
                 "type": "object",
@@ -2928,9 +4067,13 @@
                         "format": "date-time"
                     },
                     "avatar": {
-                        "type": [
-                            "string",
-                            "null"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AvatarData"
+                            },
+                            {
+                                "type": "null"
+                            }
                         ]
                     },
                     "is_two_factor_enabled": {
@@ -2966,6 +4109,61 @@
                     "name",
                     "email",
                     "is_two_factor_enabled"
+                ],
+                "additionalProperties": false
+            },
+            "Device.DeviceData": {
+                "title": "Device",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "session",
+                            "token"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "ip_address": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "user_agent": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "last_active_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "is_current": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "id",
+                    "kind",
+                    "name",
+                    "is_current"
                 ],
                 "additionalProperties": false
             },
@@ -3320,8 +4518,42 @@
                 },
                 "additionalProperties": false
             },
-            "Feedback.SubmitData": {
-                "title": "Submit",
+            "Feedback.PublicSubmitData": {
+                "title": "Public Submit",
+                "type": "object",
+                "properties": {
+                    "started_at": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "bug",
+                            "idea",
+                            "other"
+                        ]
+                    },
+                    "body": {
+                        "type": "string",
+                        "maxLength": 5000
+                    },
+                    "website": {
+                        "default": null,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "started_at",
+                    "category",
+                    "body"
+                ],
+                "additionalProperties": false
+            },
+            "Feedback.WriterSubmitData": {
+                "title": "Writer Submit",
                 "type": "object",
                 "properties": {
                     "category": {
@@ -3336,9 +4568,6 @@
                         "type": "string",
                         "maxLength": 5000
                     },
-                    "started_at": {
-                        "type": "string"
-                    },
                     "website": {
                         "default": null,
                         "type": [
@@ -3349,8 +4578,7 @@
                 },
                 "required": [
                     "category",
-                    "body",
-                    "started_at"
+                    "body"
                 ],
                 "additionalProperties": false
             },
@@ -3559,6 +4787,54 @@
                 ],
                 "additionalProperties": false
             },
+            "Password.ChangeData": {
+                "title": "Change",
+                "type": "object",
+                "properties": {
+                    "current_password": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "password_confirmation": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "current_password",
+                    "password",
+                    "password_confirmation"
+                ],
+                "additionalProperties": false
+            },
+            "Preferences.UpdateData": {
+                "title": "Update",
+                "type": "object",
+                "properties": {
+                    "theme": {
+                        "type": "string",
+                        "enum": [
+                            "system",
+                            "light",
+                            "dark"
+                        ]
+                    },
+                    "locale": {
+                        "type": "string",
+                        "enum": [
+                            "en",
+                            "de",
+                            "ja"
+                        ]
+                    }
+                },
+                "required": [
+                    "theme",
+                    "locale"
+                ],
+                "additionalProperties": false
+            },
             "Preferences.UpdateThemeData": {
                 "title": "Update Theme",
                 "type": "object",
@@ -3573,6 +4849,79 @@
                 },
                 "required": [
                     "theme"
+                ],
+                "additionalProperties": false
+            },
+            "Profile.Avatar.UploadData": {
+                "title": "Upload",
+                "type": "object",
+                "properties": {
+                    "photo": {
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "crop_x": {
+                        "default": null,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "crop_y": {
+                        "default": null,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "crop_width": {
+                        "default": null,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "crop_height": {
+                        "default": null,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "photo"
+                ],
+                "additionalProperties": false
+            },
+            "Profile.Email.ChangeData": {
+                "title": "Change",
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "current_password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "current_password"
+                ],
+                "additionalProperties": false
+            },
+            "Profile.UpdateData": {
+                "title": "Update",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    }
+                },
+                "required": [
+                    "name"
                 ],
                 "additionalProperties": false
             },
