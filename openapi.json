@@ -1,7 +1,7 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "DearFutureMe API",
+        "title": "You Made It API",
         "version": "0.0.0"
     },
     "paths": {
@@ -2320,6 +2320,16 @@
                     },
                     "422": {
                         "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorData"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many reset links asked for this address, or from this network, in the last hour",
                         "content": {
                             "application/json": {
                                 "schema": {
